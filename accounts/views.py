@@ -60,4 +60,23 @@ def createCustomer(requests):
     return render(requests, 'accounts/customer_forms.html', context)
 
 
-    
+def update(request, pk):
+
+    order = Order.objects.get(id=pk)
+    form = OrderForm(instance=order)
+
+    if request.method == 'POST':
+        form = OrderForm(request.POST, instance=order)
+        if form.is_valid():
+            form.save()
+            return redirect('/')
+    context = {'form': form}
+    return render(request, 'accounts/order_forms.html', context)
+
+def deleteOrder(request, pk):
+    order = Order.objects.get(id=pk)
+    if request.method == "POST":
+        order.delete()
+        return redirect('/')
+    context = {'item':order}
+    return render(request, 'accounts/delete_order.html', context)
